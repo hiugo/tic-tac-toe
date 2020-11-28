@@ -1,39 +1,33 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Tile from './Tile';
 
-export default class Board extends Component {
-  _renderRows() {
-    const rows = [];
+export default function Board(props) {
+  const { board, onPress, boardSize } = props;
 
-    for (let i = 0; i < 3; ++i) {
-      rows.push(
-        <View key={i} style={styles.row}>
-          {this._renderRow(i)}
-        </View>,
-      );
-    }
+  const sizeArray = new Array(boardSize).fill(null);
 
-    return rows;
-  }
+  return (
+    <View style={styles.container}>
+      {sizeArray.map((_, rowIndex) => (
+        <View key={rowIndex} style={styles.row}>
+          {sizeArray.map((__, colIndex) => renderTile(rowIndex, colIndex))}
+        </View>
+      ))}
+    </View>
+  );
 
-  _renderRow(number) {
-    const tiles = [];
-    const { board, onPress } = this.props;
+  function renderTile(rowIndex, colIndex) {
+    const index = rowIndex * boardSize + colIndex;
 
-    for (let i = 0; i < 3; ++i) {
-      const index = number * 3 + i;
-
-      tiles.push(
-        <Tile key={i} value={board[index]} index={index} onPress={onPress} />,
-      );
-    }
-
-    return tiles;
-  }
-
-  render() {
-    return <View style={styles.container}>{this._renderRows()}</View>;
+    return (
+      <Tile
+        key={colIndex}
+        value={board[index]}
+        index={index}
+        onPress={onPress}
+      />
+    );
   }
 }
 
